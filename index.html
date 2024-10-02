@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Interface</title>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h1>Chat Interface</h1>
+  <div id="chatContainer">
+    <h3>Messages</h3>
+    <ul id="messageList"></ul>
+  </div>
+
+  <div id="messageForm">
+    <input type="text" id="toUserId" placeholder="Send to UID...">
+    <input type="text" id="messageInput" placeholder="Enter your message...">
+    <button id="sendButton">Send</button>
+  </div>
+
+  <script>
+    const socket = io('http://localhost:3000'); // Ensure you use the correct server
+  
+    const userUid = "6acuZ334GWSS73Hgjjd92ZujVFr2"; // Your UID
+    const messageList = document.getElementById('messageList');
+  
+    // Connect and join room based on the user's UID
+    socket.emit('joinRoom', userUid);
+  
+    // When receiving a private message, update the message list
+    socket.on('privateMessage', (data) => {
+      const newMessage = document.createElement('li');
+      newMessage.textContent = `Message from ${data.fromUserId}: ${data.message}`;
+      messageList.appendChild(newMessage);
+    });
+  
+    // Send message
+    document.getElementById('sendButton').addEventListener('click', () => {
+      const toUserId = document.getElementById('toUserId').value;
+      const message = document.getElementById('messageInput').value;
+      
+      // Include the `fromUserId` when sending the message
+      socket.emit('privateMessage', { fromUserId: userUid, toUserId, message });
+    });
+  </script>
+</body>
+</html>
