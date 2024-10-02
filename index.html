@@ -20,12 +20,11 @@
   </div>
 
   <script>
-    const socket = io('http://localhost:3000'); // Ensure you use the correct server
+    const socket = io('http://localhost:3000'); 
   
-    const userUid = "6acuZ334GWSS73Hgjjd92ZujVFr2"; // Your UID
+    const userUid = "6acuZ334GWSS73Hgjjd92ZujVFr2"; 
     const messageList = document.getElementById('messageList');
-  
-    // Connect and join room based on the user's UID
+
     socket.emit('joinRoom', userUid);
   
     // When receiving a private message, update the message list
