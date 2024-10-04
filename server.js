@@ -13,8 +13,8 @@ io.on('connection', (socket) => {
   console.log('a user connected:', socket.id);
 
   // When a user sends a message
-  socket.on('privateMessage', ({ fromUserId, toUserId, message }) => {
-    console.log(`Message from ${fromUserId} to ${toUserId}: ${message}`);
+  socket.on('privateMessage', ({ fromUserId, toUserId, imageBytes,message }) => {
+    console.log(` message from ${fromUserId} to ${toUserId}: ${message}`);
 
     // Store the message
     if (!userMessages[toUserId]) {
@@ -30,6 +30,7 @@ io.on('connection', (socket) => {
     io.to(toUserId).emit('privateMessage', {
       fromUserId: fromUserId,
       message: message,
+      imageBytes: imageBytes,
     });
   });
 

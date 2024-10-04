@@ -30,8 +30,30 @@
     // When receiving a private message, update the message list
     socket.on('privateMessage', (data) => {
       const newMessage = document.createElement('li');
-      newMessage.textContent = `Message from ${data.fromUserId}: ${data.message}`;
-      messageList.appendChild(newMessage);
+      
+      // Check if the data contains image bytes
+      if (data.imageBytes) {
+        // Convert image bytes to a base64 string
+        const imageBlob = new Blob([new Uint8Array(data.imageBytes)], { type: 'image/jpeg' });
+        const imageUrl = URL.createObjectURL(imageBlob);
+        
+        // Create an image element to display
+        const imageElement = document.createElement('img');
+        imageElement.src = imageUrl;
+        imageElement.style.maxWidth = '200px';  // Set a max width for the image
+        imageElement.style.display = 'block';  // Ensure it displays as a block element
+
+        newMessage.appendChild(imageElement);  // Add the image to the message list item
+      }
+      
+      // Check if the data contains a text message
+      if (data.message) {
+        const textMessage = document.createElement('p');
+        textMessage.textContent = `Message from ${data.fromUserId}: ${data.message}`;
+        newMessage.appendChild(textMessage);
+      }
+
+      messageList.appendChild(newMessage);  // Append the new message to the message list
     });
   
     // Send message
